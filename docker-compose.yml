@@ -14,8 +14,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      # Faqat localhost dan kirish mumkin (xavfsizlik uchun)
-      - "127.0.0.1:${DB_PORT:-5432}:5432"
+      # Gayratstroy (5436) bilan to'qnashmasligi uchun .env da 5440 qilingan
+      - "127.0.0.1:${DB_PORT:-5440}:5432"
     command:
       - "postgres"
       - "-c"
@@ -62,7 +62,7 @@ services:
       TELEGRAM_BOT_URL: http://telegram_bot:8087
       TZ: ${TZ:-Asia/Tashkent}
     ports:
-      - "${API_PORT:-8000}:8000"
+      - "${API_PORT:-8020}:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -87,11 +87,12 @@ services:
       DIRECTOR_TELEGRAM_IDS: ${DIRECTOR_TELEGRAM_IDS:-}
       COMPANY_NAME: ${COMPANY_NAME:-Metall Baza}
       COMPANY_PHONE: ${COMPANY_PHONE:-+998 90 123 45 67}
+      API_URL: http://api:8000
       BOT_HTTP_HOST: 0.0.0.0
       BOT_HTTP_PORT: 8087
       TZ: ${TZ:-Asia/Tashkent}
     ports:
-      - "127.0.0.1:${BOT_PORT:-8087}:8087"
+      - "127.0.0.1:${BOT_PORT:-8090}:8087"
     depends_on:
       - api
     volumes:
@@ -105,14 +106,14 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_frontend
     restart: unless-stopped
     ports:
-      - "${FRONTEND_PORT:-3000}:3000"
+      - "${FRONTEND_PORT:-3010}:3000"
     depends_on:
       - api
     volumes:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      VITE_API_URL: http://localhost:${API_PORT:-8000}
+      VITE_API_URL: http://localhost:${API_PORT:-8020}
       TZ: ${TZ:-Asia/Tashkent}
 
   # Optional: pgAdmin - faqat dev rejimida
@@ -150,7 +151,7 @@ services:
       BACKUP_SERVER_PORT: "8086"
       TZ: ${TZ:-Asia/Tashkent}
     ports:
-      - "${BACKUP_PORT:-8086}:8086"
+     - "${BACKUP_PORT:-8092}:8085"
     depends_on:
       db:
         condition: service_healthy
