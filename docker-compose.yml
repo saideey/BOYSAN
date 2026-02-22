@@ -150,7 +150,7 @@ services:
       BACKUP_SERVER_PORT: "8086"
       TZ: ${TZ:-Asia/Tashkent}
     ports:
-      - "${BACKUP_PORT:-8087}:8087"
+      - "${BACKUP_PORT:-8086}:8086"
     depends_on:
       db:
         condition: service_healthy
